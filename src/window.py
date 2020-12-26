@@ -1,6 +1,7 @@
 import win32gui, win32con
 import pyvda
-import time
+import subprocess
+import desktop
 
 class Window:
     def __init__(self, title):
@@ -35,10 +36,12 @@ class Window:
         return pyvda.GetWindowDesktopNumber(self.win32)
     
     def move_to_desktop(self, desktop, follow=False):
-        # if desktop > pyvda.GetDesktopCount():
-        #     raise ValueError(f"{desktop} is not a valid desktop number (there are {pyvda.GetDesktopCount()} desktops)")
+        if desktop > pyvda.GetDesktopCount()+1:
+            raise ValueError("That is not a valid desktop number")
+        if desktop > pyvda.GetDesktopCount():
+            subprocess.call(f"VirtualDesktop /n:{desktop}")
 
         pyvda.MoveWindowToDesktopNumber(self.win32, desktop)
 
         if follow:
-            pyvda.GoToDesktopNumber(desktop)
+            desktop.focus(desktop)
