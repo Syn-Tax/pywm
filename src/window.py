@@ -1,4 +1,6 @@
 import win32gui, win32con
+import pyvda
+import time
 
 class Window:
     def __init__(self, title):
@@ -17,7 +19,6 @@ class Window:
     def move(self, dx, dy, dw, dh):
         # (left, top, right, bottom)
         window_rect = win32gui.GetWindowRect(self.win32)
-        print(window_rect)
 
         width = window_rect[2] - window_rect[0]
         height = window_rect[3] - window_rect[1]
@@ -29,5 +30,15 @@ class Window:
 
         win32gui.ShowWindow(self.win32, win32con.SW_NORMAL)
         win32gui.MoveWindow(self.win32, new_x, new_y, new_width, new_height, 1)
+    
+    def get_desktop(self):
+        return pyvda.GetWindowDesktopNumber(self.win32)
+    
+    def move_to_desktop(self, desktop, follow=False):
+        # if desktop > pyvda.GetDesktopCount():
+        #     raise ValueError(f"{desktop} is not a valid desktop number (there are {pyvda.GetDesktopCount()} desktops)")
 
-        print(win32gui.GetWindowRect(self.win32))
+        pyvda.MoveWindowToDesktopNumber(self.win32, desktop)
+
+        if follow:
+            pyvda.GoToDesktopNumber(desktop)
