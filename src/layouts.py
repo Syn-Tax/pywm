@@ -2,7 +2,11 @@ class MonadTall:
     def __init__(self, switched=False):
         self.switched = switched
 
-    def arrange(self, stack, screen):        
+    def arrange(self, stack, screen):
+        if len(stack) == 1:
+            stack[0].place(-8, -1, int(screen.resolution[0]+16), int(screen.resolution[1]+8))
+            return
+
         if not self.switched:
             stack[0].place(-8, -1, int(screen.resolution[0]/2+12), int(screen.resolution[1]+8))
 

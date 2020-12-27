@@ -2,6 +2,7 @@ import win32gui, win32con
 import pyvda
 import subprocess
 import desktop
+import workspace
 
 def get_windows():
     windows = []
@@ -9,7 +10,7 @@ def get_windows():
         if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd) != "":
             try:
                 if pyvda.GetWindowDesktopNumber(hwnd):
-                    windows.append(window.Window(None, hwnd, desktop))
+                    windows.append(hwnd)
             except:
                 pass
     
@@ -18,7 +19,7 @@ def get_windows():
     return windows
 
 class Window:
-    def __init__(self, title, hwnd, workspace):
+    def __init__(self, title, hwnd, workspace:workspace.Workspace):
         if title == None and hwnd == None:
             raise Warning("Cannot find window")
         elif hwnd == None:
