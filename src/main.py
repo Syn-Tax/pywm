@@ -3,7 +3,7 @@ import desktop, workspace, window, screen, layouts
 import sys
 import time
 
-window_delay = 0.001
+window_delay = 0.01
 
 screens = [screen.Screen(1920, 1080)]
 

@@ -4,7 +4,7 @@ class MonadTall:
 
     def arrange(self, stack, screen):
         if len(stack) == 1:
-            stack[0].place(-8, -1, int(screen.resolution[0]+16), int(screen.resolution[1]+8))
+            stack[0].maximise()
             return
 
         if not self.switched:
