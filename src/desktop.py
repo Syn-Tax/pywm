@@ -1,7 +1,7 @@
 import win32gui
 import pyvda
 import subprocess
-import pygetwindow
+import window
 
 def focus(desktop):
     if desktop >= pyvda.GetDesktopCount():
@@ -27,7 +27,7 @@ def get_windows(desktop):
         if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd) != "":
             try:
                 if pyvda.GetWindowDesktopNumber(hwnd) == desktop+1:
-                    windows.append(hwnd)
+                    windows.append(window.Window(None, hwnd, desktop))
             except:
                 pass
     

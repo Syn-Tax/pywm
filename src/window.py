@@ -3,6 +3,20 @@ import pyvda
 import subprocess
 import desktop
 
+def get_windows():
+    windows = []
+    def callback(hwnd, _):
+        if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd) != "":
+            try:
+                if pyvda.GetWindowDesktopNumber(hwnd):
+                    windows.append(window.Window(None, hwnd, desktop))
+            except:
+                pass
+    
+    win32gui.EnumWindows(callback, None)
+
+    return windows
+
 class Window:
     def __init__(self, title, hwnd, workspace):
         if title == None and hwnd == None:
@@ -37,8 +51,13 @@ class Window:
         new_width = width+dw
         new_height = height+dh
 
-        win32gui.ShowWindow(self.win32, win32con.SW_NORMAL)
+        self.restore()
         win32gui.MoveWindow(self.win32, new_x, new_y, new_width, new_height, 1)
+
+    def place(self, x, y, w, h):
+        self.restore()
+
+        win32gui.MoveWindow(int(self.win32), int(x), int(y), int(w), int(h), 1)
     
     def get_desktop(self):
         return pyvda.GetWindowDesktopNumber(self.win32)-1
