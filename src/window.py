@@ -4,9 +4,17 @@ import subprocess
 import desktop
 
 class Window:
-    def __init__(self, title):
-        self.title = title
-        self.win32 = win32gui.FindWindow(None, title)
+    def __init__(self, title, hwnd, workspace):
+        if title == None and hwnd == None:
+            raise Warning("Cannot find window")
+        elif hwnd == None:
+            self.title = title
+            self.win32 = win32gui.FindWindow(None, title)
+        elif title == None:
+            self.title = win32gui.GetWindowText(hwnd)
+            self.win32 = hwnd
+
+        self.workspace = workspace
 
     def maximise(self):
         win32gui.ShowWindow(self.win32, win32con.SW_MAXIMIZE)
@@ -33,15 +41,15 @@ class Window:
         win32gui.MoveWindow(self.win32, new_x, new_y, new_width, new_height, 1)
     
     def get_desktop(self):
-        return pyvda.GetWindowDesktopNumber(self.win32)
+        return pyvda.GetWindowDesktopNumber(self.win32)-1
     
-    def move_to_desktop(self, desktop, follow=False):
-        if desktop > pyvda.GetDesktopCount()+1:
+    def move_to_desktop(self, d, follow=False):
+        if d > pyvda.GetDesktopCount():
             raise ValueError("That is not a valid desktop number")
-        if desktop > pyvda.GetDesktopCount():
-            subprocess.call(f"VirtualDesktop /n:{desktop}")
+        if d >= pyvda.GetDesktopCount():
+            subprocess.call(f"VirtualDesktop /n:{d}")
 
-        pyvda.MoveWindowToDesktopNumber(self.win32, desktop)
+        desktop.move_window(self.win32, d)
 
         if follow:
             desktop.focus(desktop)

@@ -1,11 +1,9 @@
 import win32gui
 import pyvda
-import window
+import window, stack
 
 w = window.Window(win32gui.GetWindowText(win32gui.GetForegroundWindow()))
 
-pyvda.GoToDesktopNumber(5)
+s = stack.Stack([w])
 
-print(w.get_desktop())
-w.move_to_desktop(5, True)
-print(w.get_desktop())
+print(s.windows)
