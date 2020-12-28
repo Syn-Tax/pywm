@@ -1,0 +1,1 @@
+python main.py > pywm.log 2> pywm.err

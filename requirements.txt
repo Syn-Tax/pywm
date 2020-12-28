@@ -1,0 +1,4 @@
+pywin32
+pyvda
+keyboard
+mouse
