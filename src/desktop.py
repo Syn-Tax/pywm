@@ -21,13 +21,13 @@ def count():
 def move_window(hwnd, desktop):
     pyvda.MoveWindowToDesktopNumber(hwnd, desktop+1)
 
-def get_windows(desktop):
+def get_windows(workspaces, desktop):
     windows = []
     def callback(hwnd, _):
         if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd) != "":
             try:
                 if pyvda.GetWindowDesktopNumber(hwnd) == desktop+1:
-                    windows.append(window.Window(None, hwnd, desktop))
+                    windows.append(window.Window(None, hwnd, workspaces[desktop]))
             except:
                 pass
     

@@ -16,7 +16,7 @@ class Workspace:
         self.stack.remove(window)
 
     def layout_windows(self):
-        print([f"{w.win32}, {win32gui.GetWindowText(w.win32)}" for w in self.stack])
+        print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
         self.layout.arrange(self.stack, self.screen)
 
     def change_layout(self, layout):
