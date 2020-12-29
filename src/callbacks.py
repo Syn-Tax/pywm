@@ -11,14 +11,14 @@ def _window_open_close(callback, window_delay, workspaces, window_ignore):
         # check for opened windows
         for w in current_windows:
             if not w in prev_windows:
-                print("window open detected")
+                # print("window open detected")
                 callback(w, workspaces, True)
                 prev_windows = current_windows
 
         # check for closed windows
         for w in prev_windows:
             if not w in current_windows:
-                print("window close detected")
+                # print("window close detected")
                 callback(w, workspaces, False)
                 prev_windows = current_windows
         time.sleep(window_delay)

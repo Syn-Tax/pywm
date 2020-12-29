@@ -72,9 +72,9 @@ class Window:
             self.title = win32gui.GetWindowText(hwnd)
             self.hwnd = hwnd
 
-        self.workspace = work
+        self.work = work
 
-    def maximise(self):
+    def maximize(self):
         win32gui.ShowWindow(self.hwnd, win32con.SW_MAXIMIZE)
 
     def minimize(self):
@@ -124,20 +124,20 @@ class Window:
         win32gui.SetForegroundWindow(self.hwnd)
 
     def move_up(self, wrap=True):
-        ind = self.workspace.stack.index(self)
+        ind = self.work.stack.index(self)
         if wrap:
-            self.workspace.stack[(ind+1) % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[(ind+1) % len(self.workspace.stack)]
+            self.work.stack[(ind+1) % len(self.work.stack)], self.work.stack[ind] = self.work.stack[ind], self.work.stack[(ind+1) % len(self.work.stack)]
 
         else:
-            self.workspace.stack[ind+1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind+1]
+            self.work.stack[ind+1], self.work.stack[ind] = self.work.stack[ind], self.work.stack[ind+1]
 
-        self.workspace.layout_windows()
+        self.work.layout_windows()
 
     def move_down(self, wrap=True):
-        ind = self.workspace.stack.index(self)
+        ind = self.work.stack.index(self)
         if wrap:
-            self.workspace.stack[(ind-1) % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[(ind-1) % len(self.workspace.stack)]
+            self.work.stack[(ind-1) % len(self.work.stack)], self.work.stack[ind] = self.work.stack[ind], self.work.stack[(ind-1) % len(self.work.stack)]
         else:
-            self.workspace.stack[ind-1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind-1]
+            self.work.stack[ind-1], self.work.stack[ind] = self.work.stack[ind], self.work.stack[ind-1]
 
-        self.workspace.layout_windows()
+        self.work.layout_windows()

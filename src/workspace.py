@@ -8,10 +8,24 @@ def switch_current(workspaces):
     w = get_current(workspaces)
     w.switch_stack()
 
+def resize_current(workspaces, step):
+    w = get_current(workspaces)
+    w.layout.scale += step
+    w.layout_windows()
+
+def layout_current(workspaces):
+    w = get_current(workspaces)
+    w.layout_windows()
+
+def cycle_current_layout(workspaces):
+    w = get_current(workspaces)
+    w.cycle_layout()
+
 class Workspace:
-    def __init__(self, name, screen, layout, current_windows:list=[]):
+    def __init__(self, name, screen, layouts:list, current_windows:list=[]):
         self.stack = current_windows
-        self.layout = layout
+        self.layouts = layouts
+        self.layout = layouts[0]
         self.name = name
         self.screen = screen
     
@@ -22,11 +36,12 @@ class Workspace:
         self.stack.remove(window)
 
     def layout_windows(self):
-        # print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
+        print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
         self.layout.arrange(self.stack, self.screen)
 
-    def change_layout(self, layout):
-        self.layout = layout
+    def cycle_layout(self):
+        ind = self.layouts.index(self.layout)
+        self.layout = self.layouts[(ind+1) % len(self.layouts)]
         self.layout_windows()
 
     def get_active_window(self, window_ignore=[]):
