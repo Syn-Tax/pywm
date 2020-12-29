@@ -24,14 +24,9 @@ def window_open_close_callback(hwnd, workspaces, open):
         curr_workspace.remove_window(win)
         curr_workspace.layout_windows()
 
-def keyboard_event(event):
-    print(event.event_type)
-
 def main():
     # Check for newly opened and closed windows and re-establing layouts in those cases
     window_thread = callbacks.window_open_close(window_open_close_callback, config.window_delay, config.workspaces, config.window_ignore)
-
-    # keyboard.hook(keyboard_event, suppress=True)
 
     # block the current thread so the program doesn't exit
     keyboard.wait()
