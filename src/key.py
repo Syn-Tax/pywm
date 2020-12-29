@@ -6,7 +6,6 @@ class Key:
         self.key = key
         self.function = function
         self.args = args
+        self.hotkey = "+".join(mods) + f"+{key}"
+        keyboard.add_hotkey(self.hotkey, function, args)
     
-    def add_hotkeys(self):
-        hotkey = "+".join(self.mods) + f"+{self.key}"
-        keyboard.add_hotkey(hotkey, self.function, self.args)

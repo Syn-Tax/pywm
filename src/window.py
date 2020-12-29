@@ -29,15 +29,22 @@ def get_window_objects(workspaces, window_ignore=[]):
 
 def get_active_window(workspaces, window_ignore=[]):
     hwnd = win32gui.GetForegroundWindow()
-    for window in get_window_objects(workspaces, window_ignore=window_ignore):
-        if window.hwnd == hwnd:
-            return window
+    win = None
+    for w in get_window_objects(workspaces, window_ignore=window_ignore):
+        if w.hwnd == hwnd:
+            win = w
+    return win
 
-def move_up_active(workspaces, window_ignore=[]):
-    get_active_window(workspaces).move_up()
+def move_up_active(workspaces, window_ignore=[], wrap=True):
+    w = get_active_window(workspaces, window_ignore=window_ignore, wrap=wrap)
+    w.move_up()
 
-def move_down_active(workspaces, window_ignore=[]):
-    get_active_window(workspaces).move_down()
+def move_down_active(workspaces, window_ignore=[], wrap=True):
+    w = get_active_window(workspaces, window_ignore=window_ignore, wrap=wrap)
+    w.move_down()
+
+def activate_up(workspaces, window_ignore=[]):
+    pass
 
 class Window:
     def __init__(self, title, hwnd, work:workspace.Workspace):
@@ -98,12 +105,21 @@ class Window:
     def focus(self):
         win32gui.SetForegroundWindow(self.hwnd)
 
-    def move_up(self):
+    def move_up(self, wrap=True):
         ind = self.workspace.stack.index(self)
-        self.workspace.stack[ind-1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind-1]
+        if wrap:
+            self.workspace.stack[ind+1 % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind+1 % len(self.workspace.stack)]
+
+        else:
+            self.workspace.stack[ind+1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind+1]
+
         self.workspace.layout_windows()
 
-    def move_down(self):
+    def move_down(self, wrap=True):
         ind = self.workspace.stack.index(self)
-        self.workspace.stack[ind+1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind+1]
+        if wrap:
+            self.workspace.stack[ind-1 % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind-1 % self.workspace.stack]
+        else:
+            self.workspace.stack[ind-1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind-1]
+
         self.workspace.layout_windows()

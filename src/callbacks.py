@@ -26,9 +26,9 @@ def _window_open_close(callback, window_delay, workspaces, window_ignore):
 def window_open_close(callback, window_delay, workspaces, window_ignore):
     thread = threading.Thread(target=_window_open_close, args=(callback, window_delay, workspaces, window_ignore))
     thread.start()
-    print("window_open_close thread started")
+    # print("window_open_close thread started")
     return thread
 
 def wait():
     while True:
-        time.sleep(1)
+        time.sleep(0.1)

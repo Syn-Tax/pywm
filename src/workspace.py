@@ -1,6 +1,8 @@
 import win32gui
 import pyvda
-import window
+
+def get_current(workspaces):
+    return workspaces[pyvda.GetCurrentDesktopNumber()-1]
 
 class Workspace:
     def __init__(self, name, screen, layout, current_windows:list=[]):
@@ -16,7 +18,7 @@ class Workspace:
         self.stack.remove(window)
 
     def layout_windows(self):
-        print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
+        # print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
         self.layout.arrange(self.stack, self.screen)
 
     def change_layout(self, layout):
