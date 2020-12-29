@@ -1,4 +1,4 @@
-import win32gui, win32con
+import win32gui, win32con, win32com.client
 import pyvda
 import subprocess
 import desktop
@@ -36,15 +36,30 @@ def get_active_window(workspaces, window_ignore=[]):
     return win
 
 def move_up_active(workspaces, window_ignore=[], wrap=True):
-    w = get_active_window(workspaces, window_ignore=window_ignore, wrap=wrap)
-    w.move_up()
+    w = get_active_window(workspaces, window_ignore=window_ignore)
+    w.move_up(wrap=wrap)
 
 def move_down_active(workspaces, window_ignore=[], wrap=True):
-    w = get_active_window(workspaces, window_ignore=window_ignore, wrap=wrap)
-    w.move_down()
+    w = get_active_window(workspaces, window_ignore=window_ignore)
+    w.move_down(wrap=True)
 
-def activate_up(workspaces, window_ignore=[]):
-    pass
+def activate_up(workspaces, window_ignore=[], wrap=True):
+    w = workspace.get_current(workspaces)
+    active_window = get_active_window(workspaces, window_ignore=window_ignore)
+    ind = w.stack.index(active_window)
+    if wrap:
+        w.stack[(ind-1) % len(w.stack)].focus()
+    else:
+        w.stack[ind-1].focus()
+
+def activate_down(workspaces, window_ignore=[], wrap=True):
+    w = workspace.get_current(workspaces)
+    active_window = get_active_window(workspaces, window_ignore=window_ignore)
+    ind = w.stack.index(active_window)
+    if wrap:
+        w.stack[(ind+1) % len(w.stack)].focus()
+    else:
+        w.stack[ind+1].focus()
 
 class Window:
     def __init__(self, title, hwnd, work:workspace.Workspace):
@@ -103,12 +118,15 @@ class Window:
             desktop.focus(desktop)
     
     def focus(self):
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shell.SendKeys('%')
+
         win32gui.SetForegroundWindow(self.hwnd)
 
     def move_up(self, wrap=True):
         ind = self.workspace.stack.index(self)
         if wrap:
-            self.workspace.stack[ind+1 % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind+1 % len(self.workspace.stack)]
+            self.workspace.stack[(ind+1) % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[(ind+1) % len(self.workspace.stack)]
 
         else:
             self.workspace.stack[ind+1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind+1]
@@ -118,7 +136,7 @@ class Window:
     def move_down(self, wrap=True):
         ind = self.workspace.stack.index(self)
         if wrap:
-            self.workspace.stack[ind-1 % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind-1 % self.workspace.stack]
+            self.workspace.stack[(ind-1) % len(self.workspace.stack)], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[(ind-1) % len(self.workspace.stack)]
         else:
             self.workspace.stack[ind-1], self.workspace.stack[ind] = self.workspace.stack[ind], self.workspace.stack[ind-1]
 
