@@ -2,13 +2,24 @@ import screen, workspace, desktop, layouts, window
 from key import *
 import subprocess
 
-screens = [screen.Screen(screen.resolution())]
+screens = [screen.Screen(screen.resolution(), screen.border())]
 
-window_ignore = [   "Wox",
-                    "DesktopWindowXamlSource"
+window_ignore = [   
+    "Wox",
+    "DesktopWindowXamlSource", # some secondary window for wt that is always transparent
+    "Bar"
 ]
 
-workspaces = [workspace.Workspace(f"Desktop {i}", screens[0], [layouts.MonadTall(), layouts.Monacle()]) for i in range(desktop.count())]
+border_window_classes = [
+    "Chrome_WidgetWin_[0-9]",
+]
+
+border_window_ignore = [
+    "Brave",
+    "Chrome"
+]
+
+workspaces = [workspace.Workspace(f"Desktop {i}", screens[0], layouts=[layouts.MonadTall(border_window_classes, border_window_ignore), layouts.Monacle()]) for i in range(desktop.count())]
 resize_step = 20
 
 keys = [
@@ -27,6 +38,7 @@ keys = [
     # resize master & stack panes
     Key(["win", "shift"], "left", workspace.resize_current, args=[workspaces, -resize_step]),
     Key(["win", "shift"], "right", workspace.resize_current, args=[workspaces, resize_step]),
+    Key(["win", "shift"], "down", workspace.reset_scale, args=[workspaces]),
 
     # run programs
     Key(["win"], "enter", subprocess.call, args=["wt"]),

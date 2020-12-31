@@ -13,6 +13,11 @@ def resize_current(workspaces, step):
     w.layout.scale += step
     w.layout_windows()
 
+def reset_scale(workspaces):
+    w = get_current(workspaces)
+    w.layout.scale = 0
+    w.layout_windows()
+
 def layout_current(workspaces):
     w = get_current(workspaces)
     w.layout_windows()
@@ -36,7 +41,7 @@ class Workspace:
         self.stack.remove(window)
 
     def layout_windows(self):
-        print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
+        # print([f"{w.hwnd}, {win32gui.GetWindowText(w.hwnd)}" for w in self.stack])
         self.layout.arrange(self.stack, self.screen)
 
     def cycle_layout(self):
