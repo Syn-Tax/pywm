@@ -1,5 +1,5 @@
 import window
-import threading, time
+import multiprocessing, time
 
 def _window_open_close(callback, window_delay, workspaces, window_ignore):
     prev_windows = window.get_windows(window_ignore)
@@ -24,7 +24,7 @@ def _window_open_close(callback, window_delay, workspaces, window_ignore):
         time.sleep(window_delay)
 
 def window_open_close(callback, window_delay, workspaces, window_ignore):
-    thread = threading.Thread(target=_window_open_close, args=(callback, window_delay, workspaces, window_ignore))
+    thread = multiprocessing.Process(target=_window_open_close, args=(callback, window_delay, workspaces, window_ignore))
     thread.start()
     # print("window_open_close thread started")
     return thread

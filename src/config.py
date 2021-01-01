@@ -1,8 +1,8 @@
-import screen, workspace, desktop, layouts, window
+import screen, workspace, desktop, layouts, window, bar
 from key import *
 import subprocess
 
-screens = [screen.Screen(screen.resolution(), screen.border())]
+screens = [screen.Screen(screen.resolution(), screen.border(), bar.Bar([], 20))]
 
 window_ignore = [   
     "Wox",
@@ -35,7 +35,7 @@ keys = [
     Key(["win"], "space", workspace.switch_current, args=[workspaces]),
     Key(["win", "shift"], "space", workspace.cycle_current_layout, args=[workspaces]),
 
-    # resize master & stack panes
+    # resize master & stack panes & margin
     Key(["win", "shift"], "left", workspace.resize_current, args=[workspaces, -resize_step]),
     Key(["win", "shift"], "right", workspace.resize_current, args=[workspaces, resize_step]),
     Key(["win", "shift"], "down", workspace.reset_scale, args=[workspaces]),
@@ -48,6 +48,9 @@ keys = [
 ]
 
 window_delay = 0.001
+
+for s in screens:
+    s.bar.set_workspaces(workspaces)
 
 for i, workspace in enumerate(workspaces):
     workspace.stack = desktop.get_windows(workspaces, i)

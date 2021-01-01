@@ -18,6 +18,11 @@ def reset_scale(workspaces):
     w.layout.scale = 0
     w.layout_windows()
 
+def resize_current_margins(workspaces, step):
+    w = get_current(workspaces)
+    w.layout.margin += step
+    w.layout_windows()
+
 def layout_current(workspaces):
     w = get_current(workspaces)
     w.layout_windows()

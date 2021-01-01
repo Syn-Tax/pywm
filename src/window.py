@@ -83,6 +83,12 @@ class Window:
     def restore(self):
         win32gui.ShowWindow(self.hwnd, win32con.SW_NORMAL)
     
+    def is_maximized(self):
+        return win32gui.GetWindowPlacement(self.hwnd)[1] == win32con.SW_MAXIMIZE
+
+    def is_minimized(self):
+        return win32gui.GetWindowPlacement(self.hwnd)[1] == win32con.SW_MINIMIZE
+    
     def move(self, dx, dy, dw, dh):
         # (left, top, right, bottom)
         window_rect = win32gui.GetWindowRect(self.hwnd)
@@ -95,11 +101,11 @@ class Window:
         new_width = width+dw
         new_height = height+dh
 
-        self.restore()
+        if self.is_maximized() or self.is_minimized(): self.restore()
         win32gui.MoveWindow(self.hwnd, new_x, new_y, new_width, new_height, 1)
 
     def place(self, x, y, w, h):
-        self.restore()
+        if self.is_maximized() or self.is_minimized(): self.restore()
 
         win32gui.MoveWindow(int(self.hwnd), int(x), int(y), int(w), int(h), 1)
     
