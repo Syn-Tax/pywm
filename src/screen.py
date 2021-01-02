@@ -7,6 +7,9 @@ def border():
     res = resolution()
     return (int((ctypes.windll.user32.GetSystemMetrics(61)-res[0])/2), int((ctypes.windll.user32.GetSystemMetrics(62)-res[1])/2))
 
+def taskber():
+    pas
+
 class Screen:
     def __init__(self, resolution, border, bar):
         self.border = border
